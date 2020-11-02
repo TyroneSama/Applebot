@@ -85,7 +85,7 @@ namespace Applebot.Services
                     }
                     else
                     {
-                        await message.RespondToSenderAsync($"That role doesn't exist. If you want to create it, use `!role add`.", ct);
+                        await message.RespondToSenderAsync($"That role doesn't exist. If you want to create it, use `!role create`.", ct);
                     }
                     return;
                 }
