@@ -37,6 +37,7 @@ namespace Applebot
             var gatewayConsumerServiceTypes = new HashSet<Type>
             {
                 typeof(PingService),
+                typeof(RoleManager),
             };
 
             using var tokenSource = new CancellationTokenSource();
