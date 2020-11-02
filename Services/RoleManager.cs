@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -12,7 +11,7 @@ namespace Applebot.Services
 {
     class RoleManager : IGatewayConsumerService
     {
-        public string FriendlyName => "Ping Pong";
+        public string FriendlyName => "Role Manager";
         string _invalid = "Unknown command.\n*Usage: `!role <create/add/remove/list>`*";
 
         public async Task ConsumeMessageAsync(IGatewayMessage message, CancellationToken ct)
