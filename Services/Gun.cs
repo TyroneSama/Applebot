@@ -59,7 +59,7 @@ namespace Applebot.Services
                 var privateReason = reason + " - From " + author.Username;
                 if (sm.MentionedUsers.FirstOrDefault() != null)
                 {
-                    target = sm.MentionedUsers.FirstOrDefault();
+                    target = guild.GetUser(sm.MentionedUsers.FirstOrDefault().Id);
                 }
                 else
                 {
