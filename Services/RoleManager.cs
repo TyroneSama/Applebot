@@ -17,6 +17,7 @@ namespace Applebot.Services
         public async Task ConsumeMessageAsync(IGatewayMessage message, CancellationToken ct)
         {
             if (message is not DiscordMessage discordMessage) { return; }
+            if (discordMessage.SocketMessage.Channel is not SocketGuildChannel) { return; }
             var parts = message.Content.ToLower().Split();
             SocketGuild guild = (discordMessage.SocketMessage.Channel as SocketGuildChannel).Guild;
             if (parts.Length >= 1 && parts[0] == "!role")
