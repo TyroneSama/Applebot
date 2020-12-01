@@ -47,13 +47,13 @@ namespace Applebot.Services
                 var sm = discordMessage.SocketMessage;
                 var author = sm.Author as SocketGuildUser;
                 var guild = channel.Guild;
+                await guild.DownloadUsersAsync();
                 if (!author.GuildPermissions.BanMembers) { return; }
                 if (parts.Count() == 1)
                 {
                     await message.RespondToSenderAsync("Usage: `.gun MENTION/ID [BAN REASON]`", ct);
                     return;
                 }
-                await guild.DownloadUsersAsync();
                 SocketUser target;
                 var reason = (parts.Count() > 2) ? message.Content.Substring(parts[0].Length + parts[1].Length + 2) : "No info provided.";
                 var privateReason = reason + " - From " + author.Username;
