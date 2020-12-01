@@ -56,7 +56,8 @@ namespace Applebot.Services
                 }
                 SocketUser target;
                 var reason = (parts.Count() > 2) ? message.Content.Substring(parts[0].Length + parts[1].Length + 2) : "No info provided.";
-                var privateReason = reason + " - From " + author.Username;
+                var privateReason = reason.Length > 200 ? reason.Substring(0, 200) : reason;
+                privateReason += " - From " + author.Username;
                 if (sm.MentionedUsers.FirstOrDefault() != null)
                 {
                     target = guild.GetUser(sm.MentionedUsers.FirstOrDefault().Id);
