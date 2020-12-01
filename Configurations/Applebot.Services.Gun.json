@@ -1,0 +1,11 @@
+{
+    "nodm": "Couldn't DM that user; they probably have DMs disabled.",
+    "ban": "Banned $USER. o/",
+    "loaded": true,
+    "servers": [
+        {
+            "id": "123456789012345678",
+            "message": "You have been banned. Appeal here: https://example.com/form"
+        }
+    ]
+}
