@@ -100,13 +100,14 @@ namespace Applebot.Services
                     await message.RespondToSenderAsync(config.noDM, ct);
                 }
                 try {
-                    var banCelebration = config.ban.Replace("$USER", target.Mention);
+                    var banCelebration = config.ban.Replace("$USER", target.Username);
                     if (config.loaded) {
                         await guild.AddBanAsync(gunMe, 0, privateReason);
                     }
                     await message.RespondToSenderAsync(banCelebration, ct);
-                } catch {
+                } catch (Exception e) {
                     await message.RespondToSenderAsync("Ban failed. Check permissions?", ct);
+                    await message.RespondInChatAsync("```\n" + e.ToString() + "```", ct);
                 }
             }
         }
