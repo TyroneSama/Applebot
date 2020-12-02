@@ -100,7 +100,7 @@ namespace Applebot.Services
                     await message.RespondToSenderAsync(config.noDM, ct);
                 }
                 try {
-                    var banCelebration = config.ban.Replace("$USER", target.Username);
+                    var banCelebration = config.ban.Replace("$USER", target.Username + " [ID: " + target.Id + "]");
                     if (config.loaded) {
                         await guild.AddBanAsync(gunMe, 0, privateReason);
                     }
