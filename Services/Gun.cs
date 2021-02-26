@@ -32,7 +32,7 @@ namespace Applebot.Services
 
         public async Task InitializeAsync(CancellationToken ct)
         {
-            config = await ConfigurationResolver.LoadConfigurationAsync<Gun, GunConfiguration>();
+            config = await ResourceResolver.LoadConfigurationAsync<Gun, GunConfiguration>();
         }
 
         public async Task ConsumeMessageAsync(IGatewayMessage message, CancellationToken ct)
