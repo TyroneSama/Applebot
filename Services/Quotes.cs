@@ -141,6 +141,27 @@ namespace Applebot.Services
                                 }
                                 await message.RespondToSenderAsync($"Out of range. There are {quotes.Count()} quotes.", ct);
                                 return;
+                            case "edit":
+                                if (parts.Count() >= 4) {
+                                    payload = String.Join(" ", parts.Skip(3));
+                                    int toedit;
+                                    bool editable = Int32.TryParse(parts[2], out toedit);
+                                    if (editable)
+                                    {
+                                        if (toedit > 0 && toedit <= quotes.Count())
+                                        {
+                                            quotes[toedit - 1] = new Quote(payload, "TODO");
+                                            Save();
+                                            await message.RespondToSenderAsync($"Edited quote #{toedit}.", ct);
+                                            return;
+                                        }
+                                    }
+                                    await message.RespondToSenderAsync($"Out of range. There are {quotes.Count()} quotes.", ct);
+                                    return;
+                                } else {
+                                    await message.RespondToSenderAsync($"Not enough arguments.", ct);
+                                    return;
+                                }
                         }
                     }
                     break;
