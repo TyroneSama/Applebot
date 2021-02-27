@@ -109,6 +109,7 @@ namespace Applebot.Services
                                 break;
                             }
                         }
+                        await message.RespondToSenderAsync($"<:itsterminal:466711750704627733>", ct);
                     }
                     else
                     {
