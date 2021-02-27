@@ -77,20 +77,20 @@ namespace Applebot.Services
                         return;
                     }
                     await message.RespondToSenderAsync(PrettyQuote(random.Next(quotes.Count())), ct);
-                    break;
+                    return;
                 case 2:
                     string arg = parts[1];
                     if (arg == "count")
                     {
                         await message.RespondToSenderAsync($"There are {quotes.Count()} quotes.", ct);
-                        break;
+                        return;
                     }
                     else if (arg == "undo" && elevated)
                     {
                         quotes.RemoveAt(quotes.Count() - 1);
                         Save();
                         await message.RespondToSenderAsync($"Removed quote #{quotes.Count() + 1}.", ct);
-                        break;
+                        return;
                     }
                     if (arg[0] == '#')
                     {
@@ -101,27 +101,16 @@ namespace Applebot.Services
                             if (target > 0 && target <= quotes.Count())
                             {
                                 await message.RespondToSenderAsync(PrettyQuote(target - 1), ct);
-                                break;
+                                return;
                             }
                             else
                             {
                                 await message.RespondToSenderAsync($"Out of range. There are {quotes.Count()} quotes.", ct);
-                                break;
-                            }
-                        }
-                        await message.RespondToSenderAsync($"<:itsterminal:466711750704627733>", ct);
-                    }
-                    else
-                    {
-                        for (int q = 0; q < quotes.Count(); q++)
-                        {
-                            if (quotes[q].response.Contains(arg))
-                            {
-                                await message.RespondToSenderAsync(PrettyQuote(q), ct);
                                 return;
                             }
                         }
-                        await message.RespondToSenderAsync("Couldn't find a quote matching that text. Try something like `!quote #69` if you want a specific number.", ct);
+                        await message.RespondToSenderAsync($"<:itsterminal:466711750704627733>", ct);
+                        return;
                     }
                     break;
                 default:
@@ -135,7 +124,7 @@ namespace Applebot.Services
                                 quotes.Add(new Quote(payload, "TODO"));
                                 Save();
                                 await message.RespondToSenderAsync($"Added quote #{quotes.Count()}.", ct);
-                                break;
+                                return;
                             case "remove":
                                 int target;
                                 bool valid = Int32.TryParse(payload, out target);
@@ -146,18 +135,25 @@ namespace Applebot.Services
                                         quotes.RemoveAt(target - 1);
                                         Save();
                                         await message.RespondToSenderAsync($"Removed quote #{target}.", ct);
-                                        break;
+                                        return;
                                     }
                                 }
                                 await message.RespondToSenderAsync($"Out of range. There are {quotes.Count()} quotes.", ct);
-                                break;
-                            default:
-                                await message.RespondToSenderAsync("?", ct);
-                                break;
+                                return;
                         }
                     }
                     break;
             }
+            string search = String.Join(" ", parts.Skip(1));
+            for (int q = 0; q < quotes.Count(); q++)
+            {
+                if (quotes[q].response.ToLower().Contains(search))
+                {
+                    await message.RespondToSenderAsync(PrettyQuote(q), ct);
+                    return;
+                }
+            }
+            await message.RespondToSenderAsync("Couldn't find a quote matching that text. Try something like `!quote #69` if you want a specific number.", ct);
         }
     }
 }
