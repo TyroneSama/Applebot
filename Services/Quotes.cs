@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
 using Newtonsoft.Json;
+using Discord;
+using Discord.WebSocket;
 
 namespace Applebot.Services
 {
@@ -58,6 +60,12 @@ namespace Applebot.Services
             var parts = message.Content.ToLower().Split();
             if (parts[0] != "!quote") { return; }
 
+            bool elevated = false;
+            if (message is DiscordMessage discordMessage) {
+                var sm = discordMessage.SocketMessage;
+                var author = sm.Author as SocketGuildUser;
+                elevated = author.GuildPermissions.BanMembers;
+
             switch (parts.Count())
             {
                 case 1:
@@ -74,7 +82,7 @@ namespace Applebot.Services
                     {
                         await message.RespondToSenderAsync($"There are {quotes.Count()} quotes.", ct);
                         break;
-                    } else if (arg == "undo") {
+                    } else if (arg == "undo" && elevated) {
                         quotes.RemoveAt(quotes.Count()-1);
                         Save();
                         await message.RespondToSenderAsync($"Removed quote #{quotes.Count()+1}.", ct);
@@ -112,7 +120,7 @@ namespace Applebot.Services
                     }
                     break;
                 default:
-                    if (parts.Count() >= 3)
+                    if (parts.Count() >= 3 && elevated)
                     {
                         string command = parts[1];
                         string payload = String.Join(" ", parts.Skip(2));
