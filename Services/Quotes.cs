@@ -61,10 +61,12 @@ namespace Applebot.Services
             if (parts[0] != "!quote") { return; }
 
             bool elevated = false;
-            if (message is DiscordMessage discordMessage) {
+            if (message is DiscordMessage discordMessage)
+            {
                 var sm = discordMessage.SocketMessage;
                 var author = sm.Author as SocketGuildUser;
                 elevated = author.GuildPermissions.BanMembers;
+            }
 
             switch (parts.Count())
             {
@@ -82,10 +84,12 @@ namespace Applebot.Services
                     {
                         await message.RespondToSenderAsync($"There are {quotes.Count()} quotes.", ct);
                         break;
-                    } else if (arg == "undo" && elevated) {
-                        quotes.RemoveAt(quotes.Count()-1);
+                    }
+                    else if (arg == "undo" && elevated)
+                    {
+                        quotes.RemoveAt(quotes.Count() - 1);
                         Save();
-                        await message.RespondToSenderAsync($"Removed quote #{quotes.Count()+1}.", ct);
+                        await message.RespondToSenderAsync($"Removed quote #{quotes.Count() + 1}.", ct);
                         break;
                     }
                     if (arg[0] == '#')
