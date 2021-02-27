@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Discord;
 using Discord.WebSocket;
+using System.Text.RegularExpressions;
 
 namespace Applebot.Services
 {
@@ -145,15 +146,33 @@ namespace Applebot.Services
                     break;
             }
             string search = String.Join(" ", parts.Skip(1));
-            for (int q = 0; q < quotes.Count(); q++)
+            List<Quote> results = new List<Quote>();
+
+            string pattern = @"\b" + Regex.Escape(search) + @"\b";
+            Regex re = new Regex(pattern, RegexOptions.IgnoreCase);
+
+            results = quotes.Where(x => re.IsMatch(x.response)).ToList();
+
+            if (results.Count() == 0) // try partial search
             {
-                if (quotes[q].response.ToLower().Contains(search))
+                for (int q = 0; q < quotes.Count(); q++)
                 {
-                    await message.RespondToSenderAsync(PrettyQuote(q), ct);
-                    return;
+                    if (quotes[q].response.ToLower().Contains(search))
+                    {
+                        results.Add(quotes[q]);
+                    }
                 }
             }
-            await message.RespondToSenderAsync("Couldn't find a quote matching that text. Try something like `!quote #69` if you want a specific number.", ct);
+
+            if (results.Count() > 0)
+            {
+                int randquote = quotes.IndexOf(results[random.Next(results.Count())]);
+                await message.RespondToSenderAsync(PrettyQuote(randquote), ct);
+            }
+            else
+            {
+                await message.RespondToSenderAsync("Couldn't find a quote matching that text. Try something like `!quote #69` if you want a specific number.", ct);
+            }
         }
     }
 }
