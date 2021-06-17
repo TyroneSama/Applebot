@@ -166,7 +166,7 @@ namespace Applebot.Services
                     }
                     break;
             }
-            string search = String.Join(" ", parts.Skip(1));
+            string search = String.Join(" ", parts.Skip(1)).ToLower();
             List<Quote> results = new List<Quote>();
 
             string pattern = @"\b" + Regex.Escape(search) + @"\b";
