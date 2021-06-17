@@ -58,8 +58,8 @@ namespace Applebot.Services
 
         public async Task ConsumeMessageAsync(IGatewayMessage message, CancellationToken ct)
         {
-            var parts = message.Content.ToLower().Split();
-            if (parts[0] != "!quote") { return; }
+            var parts = message.Content.Split();
+            if (parts[0].ToLower() != "!quote") { return; }
 
             bool elevated = false;
             if (message is DiscordMessage discordMessage)
@@ -117,7 +117,7 @@ namespace Applebot.Services
                 default:
                     if (parts.Count() >= 3 && elevated)
                     {
-                        string command = parts[1];
+                        string command = parts[1].ToLower();
                         string payload = String.Join(" ", parts.Skip(2));
                         switch (command)
                         {
