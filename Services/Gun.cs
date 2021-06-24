@@ -76,7 +76,7 @@ namespace Applebot.Services
                     {
                         if (config.loaded) {
                             try {
-                                //await guild.AddBanAsync(id, 0, privateReason);
+                                await guild.AddBanAsync(id, 0, privateReason);
                             } catch {
                                 await message.RespondToSenderAsync("Couldn't preemptively ban, doesn't seem like a user ID?", ct);
                             }
