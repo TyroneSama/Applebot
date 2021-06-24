@@ -58,6 +58,7 @@ namespace Applebot.Services
                 var reason = (parts.Count() > 2) ? message.Content.Substring(parts[0].Length + parts[1].Length + 2) : "No info provided.";
                 var privateReason = reason.Length > 200 ? reason.Substring(0, 200) : reason;
                 privateReason += " - From " + author.Username;
+                var gotmsg = true;
                 if (sm.MentionedUsers.FirstOrDefault() != null)
                 {
                     target = guild.GetUser(sm.MentionedUsers.FirstOrDefault().Id);
@@ -75,7 +76,7 @@ namespace Applebot.Services
                     {
                         if (config.loaded) {
                             try {
-                                await guild.AddBanAsync(id, 0, privateReason);
+                                //await guild.AddBanAsync(id, 0, privateReason);
                             } catch {
                                 await message.RespondToSenderAsync("Couldn't preemptively ban, doesn't seem like a user ID?", ct);
                             }
@@ -102,14 +103,18 @@ namespace Applebot.Services
                 }
                 catch
                 {
-                    await message.RespondToSenderAsync(config.noDM, ct);
+                    gotmsg = false;
+                    //await message.RespondToSenderAsync(config.noDM, ct);
                 }
                 try {
-                    var banCelebration = config.ban.Replace("$USER", target.Username + " [ID: " + target.Id + "]");
                     if (config.loaded) {
                         await guild.AddBanAsync(gunMe, 0, privateReason);
                     }
-                    await message.RespondToSenderAsync(banCelebration, ct);
+                    if (gotmsg) {
+                        await message.RespondToSenderAsync(config.ban.Replace("$USER", target.Username + " [ID: " + target.Id + "]"), ct);
+                    } else {
+                        await message.RespondToSenderAsync(config.noDM.Replace("$USER", target.Username + " [ID: " + target.Id + "]"), ct);
+                    }
                 } catch (Exception e) {
                     await message.RespondToSenderAsync("Ban failed. Check permissions?", ct);
                     await message.RespondInChatAsync("```\n" + e.ToString() + "```", ct);
